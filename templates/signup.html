@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up | Luxury Rent</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="auth-page">
+  <header class="nav">
+    <div class="brand">LUXURY RENT</div>
+    <nav class="menu">
+      <a href="{{ url_for('home') }}">Home</a>
+      <a href="#">FAQs</a>
+      <a href="#">About Us</a>
+    </nav>
+    <a class="ghost-btn signup-btn" href="{{ url_for('login') }}">Login</a>
+  </header>
+
+  <section class="auth-card">
+    <p class="eyebrow">NEW MEMBER</p>
+    <h1>Sign Up</h1>
+    <p class="desc">Fields aligned with your `users` table.</p>
+
+    {% if submitted %}
+      <p class="form-msg">{{ message }}</p>
+    {% endif %}
+
+    <form method="post" class="auth-form">
+      <label for="full_name">Full Name</label>
+      <input id="full_name" name="full_name" type="text" required placeholder="Enter full name" value="{{ form_data.get('full_name', '') }}">
+
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" required placeholder="you@example.com" value="{{ form_data.get('email', '') }}">
+
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" required placeholder="Create password">
+
+      <label for="phone">Phone</label>
+      <input id="phone" name="phone" type="text" placeholder="+92...">
+
+      <label for="role_id">Role</label>
+      <select id="role_id" name="role_id" required>
+        <option value="">Select role</option>
+        <option value="1" {% if form_data.get('role_id') == '1' %}selected{% endif %}>1 - Admin</option>
+        <option value="2" {% if form_data.get('role_id') == '2' %}selected{% endif %}>2 - Customer</option>
+      </select>
+
+      <label for="address">Address</label>
+      <textarea id="address" name="address" rows="3" placeholder="Enter address">{{ form_data.get('address', '') }}</textarea>
+
+      <button class="primary auth-submit" type="submit">Create Account</button>
+    </form>
+  </section>
+</body>
+</html>

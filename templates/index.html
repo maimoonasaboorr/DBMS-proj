@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luxury Rent | Premium Rentals</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <header class="nav">
+    <div class="brand">LUXURY RENT</div>
+    <nav class="menu">
+      <a href="#">FAQs</a>
+      <a href="#">About Us</a>
+      <a href="#">Contact</a>
+      <a href="#">Services</a>
+    </nav>
+    <a class="ghost-btn signup-btn" href="/signup">Sign Up</a>
+  </header>
+
+  <section class="login-wall">
+    <p class="eyebrow reveal">MEMBERS ONLY ACCESS</p>
+    <h1 class="reveal delay-1">The Art of <span class="timeless">timeless</span> Elegance</h1>
+    <p class="desc reveal delay-2">
+      Please sign in to view the collection, pricing, and concierge rental access.
+    </p>
+    <div class="actions reveal delay-3">
+      <a class="primary login-link" href="/login">Login</a>
+    </div>
+  </section>
+
+  <main class="hero">
+    <section class="hero-text">
+      <p class="eyebrow reveal">CURATED LUXURY ACCESS</p>
+      <h1 class="reveal delay-1">The Art of <span class="timeless">timeless</span> Elegance</h1>
+      <p class="desc reveal delay-2">
+        High-demand watches, couture bags, and statement accessories available on-demand
+        with insured delivery and concierge support.
+      </p>
+      <div class="actions reveal delay-3">
+        <button class="primary">Browse Collection</button>
+        <button class="secondary">View Membership</button>
+      </div>
+      <div class="meta reveal delay-4">
+        <span>30+ Brands</span>
+        <span>Verified Authenticity</span>
+        <span>Same-day in city</span>
+      </div>
+    </section>
+
+    <section class="hero-visual">
+      <div class="glass-card float">
+        <p>Featured Drop</p>
+        <h2>Patek Philippe Nautilus</h2>
+        <small>From $420/day · Fully Insured</small>
+      </div>
+      <div class="ring ring-a"></div>
+      <div class="ring ring-b"></div>
+      <div class="glow"></div>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
