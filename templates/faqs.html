@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAQs | Luxury Rent</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="auth-page">
+  <header class="nav">
+    <div class="brand">LUXURY RENT</div>
+    <nav class="menu">
+      <a href="{{ url_for('home') }}">Home</a>
+      <a href="{{ url_for('faqs') }}">FAQs</a>
+      <a href="{{ url_for('login') }}">Login</a>
+    </nav>
+    <a class="ghost-btn signup-btn" href="{{ url_for('signup') }}">Sign Up</a>
+  </header>
+
+  <section class="auth-card">
+    <p class="eyebrow">HELP CENTER</p>
+    <h1>Frequently Asked Questions</h1>
+    <div class="faq-list">
+      <article class="faq-item">
+        <h3>What is the story behind this business?</h3>
+        <p>
+          Luxury Rent started with one goal: make premium fashion and accessories accessible
+          for important moments without forcing long-term ownership.
+        </p>
+      </article>
+
+      <article class="faq-item">
+        <h3>How does the rental process work?</h3>
+        <p>
+          You browse products, choose dates, confirm booking, and receive your selected piece.
+          After use, simply return it on the agreed return date.
+        </p>
+      </article>
+
+      <article class="faq-item">
+        <h3>What quality can I expect?</h3>
+        <p>
+          Every item is authenticity-checked, cleaned, and inspected before dispatch to ensure
+          premium presentation and reliable condition.
+        </p>
+      </article>
+
+      <article class="faq-item">
+        <h3>What is your return policy?</h3>
+        <p>
+          Items should be returned by the due date in the same condition. Late returns or damage
+          may result in extra charges as per policy.
+        </p>
+      </article>
+
+      <article class="faq-item">
+        <h3>Can I cancel a booking?</h3>
+        <p>
+          Yes, cancellation is allowed before dispatch. Refund eligibility depends on how close
+          the cancellation is to the rental start date.
+        </p>
+      </article>
+    </div>
+  </section>
+</body>
+</html>

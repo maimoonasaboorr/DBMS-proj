@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us | Luxury Rent</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="auth-page">
+  <header class="nav">
+    <div class="brand">LUXURY RENT</div>
+    <nav class="menu">
+      <a href="{{ url_for('home') }}">Home</a>
+      <a href="{{ url_for('faqs') }}">FAQs</a>
+      <a href="{{ url_for('about') }}">About Us</a>
+      <a href="{{ url_for('contact') }}">Contact Us</a>
+      <a href="{{ url_for('services') }}">Services</a>
+    </nav>
+    <a class="ghost-btn signup-btn" href="{{ url_for('signup') }}">Sign Up</a>
+  </header>
+
+  <section class="auth-card">
+    <p class="eyebrow">ABOUT LUXURY RENT</p>
+    <h1>Our Story</h1>
+    <p class="desc">
+      Luxury Rent was built to make premium fashion access simple, elegant, and affordable for
+      high-value occasions. We focus on verified quality, refined presentation, and trusted service.
+    </p>
+    <p class="desc">
+      Our team curates iconic products and ensures every booking delivers the confidence and prestige
+      expected from luxury experiences.
+    </p>
+  </section>
+</body>
+</html>

@@ -472,16 +472,49 @@ h1{
 
 .auth-page{
   min-height:100vh;
+  background:
+    radial-gradient(circle at 12% 12%, #f6ead0 0%, transparent 42%),
+    radial-gradient(circle at 88% 22%, #f3e3c2 0%, transparent 44%),
+    linear-gradient(135deg, #f8f1e3 0%, #efe2c9 100%);
+  color:#3f2f18;
+}
+
+.auth-page .nav{
+  background:rgba(255,248,235,.88);
+  border:1px solid #d6bf90;
+  box-shadow:0 10px 22px rgba(120, 94, 46, .12);
+}
+
+.auth-page .menu a{
+  color:#6a5128;
+}
+
+.auth-page .menu a:hover{
+  color:#9f742a;
+}
+
+.auth-page .brand{
+  color:#4f3a18;
+}
+
+.auth-page .ghost-btn{
+  border:1px solid #c7a566;
+  background:linear-gradient(125deg, #d5af67, #e4c37f 52%, #f0d8a3);
+  color:#3c2b12;
+}
+
+.auth-page .ghost-btn:hover{
+  box-shadow:0 10px 22px rgba(160, 120, 49, .28);
 }
 
 .auth-card{
   width:min(560px, 92%);
   margin:46px auto 60px;
   padding:34px 30px;
-  border:1px solid var(--line);
+  border:1px solid #d3bd91;
   border-radius:18px;
-  background:linear-gradient(140deg, rgba(24,20,14,.92), rgba(15,15,15,.9));
-  box-shadow:0 12px 26px rgba(0,0,0,.35);
+  background:linear-gradient(140deg, rgba(255,248,236,.94), rgba(244,230,198,.9));
+  box-shadow:0 12px 26px rgba(120, 94, 46, .18);
 }
 
 .auth-card h1{
@@ -500,16 +533,20 @@ h1{
 }
 
 .auth-form label{
-  color:#e0c691;
+  color:#725526;
   font-size:.95rem;
+}
+
+.auth-form input[type="checkbox"]{
+  accent-color:#c99a3a;
 }
 
 .auth-form input,
 .auth-form select,
 .auth-form textarea{
-  border:1px solid #6f552b;
-  background:rgba(20,16,12,.8);
-  color:#f7e8c4;
+  border:1px solid #c7aa74;
+  background:rgba(255,250,241,.92);
+  color:#3d2f1a;
   border-radius:10px;
   padding:10px 12px;
   font-family:"Times New Roman",Times,serif;
@@ -519,8 +556,8 @@ h1{
 .auth-form select:focus,
 .auth-form textarea:focus{
   outline:none;
-  border-color:#c99a3a;
-  box-shadow:0 0 0 2px rgba(201,154,58,.2);
+  border-color:#b88936;
+  box-shadow:0 0 0 2px rgba(184,137,54,.22);
 }
 
 .auth-submit{
@@ -528,10 +565,53 @@ h1{
 }
 
 .form-msg{
-  border:1px solid #6f552b;
-  background:rgba(28,22,14,.75);
-  color:#e9cd96;
+  border:1px solid #c7aa74;
+  background:rgba(252,242,222,.92);
+  color:#5b431d;
   border-radius:10px;
   padding:10px 12px;
   margin-bottom:14px;
+}
+
+.story-section{
+  width:min(1180px,92%);
+  margin:12px auto 70px;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:24px 22px;
+  background:rgba(19,15,11,.75);
+}
+
+.story-section h2{
+  font-family:"Times New Roman",Times,serif;
+  color:#e8ca8e;
+  margin-bottom:10px;
+}
+
+.story-section p{
+  color:#cfbb94;
+  line-height:1.7;
+}
+
+.faq-list{
+  display:grid;
+  gap:12px;
+}
+
+.faq-item{
+  border:1px solid #c7aa74;
+  background:rgba(255,248,232,.92);
+  border-radius:12px;
+  padding:12px 14px;
+}
+
+.faq-item h3{
+  color:#4c3615;
+  margin-bottom:6px;
+  font-family:"Times New Roman",Times,serif;
+}
+
+.faq-item p{
+  color:#6a5128;
+  line-height:1.6;
 }

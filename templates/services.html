@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Services | Luxury Rent</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="auth-page">
+  <header class="nav">
+    <div class="brand">LUXURY RENT</div>
+    <nav class="menu">
+      <a href="{{ url_for('home') }}">Home</a>
+      <a href="{{ url_for('faqs') }}">FAQs</a>
+      <a href="{{ url_for('about') }}">About Us</a>
+      <a href="{{ url_for('contact') }}">Contact Us</a>
+      <a href="{{ url_for('services') }}">Services</a>
+    </nav>
+    <a class="ghost-btn signup-btn" href="{{ url_for('signup') }}">Sign Up</a>
+  </header>
+
+  <section class="auth-card">
+    <p class="eyebrow">OUR SERVICES</p>
+    <h1>Premium Rental Services</h1>
+    <div class="faq-list">
+      <article class="faq-item">
+        <h3>Luxury Product Rentals</h3>
+        <p>Rent premium watches, bags, and accessories for events, travel, and professional occasions.</p>
+      </article>
+      <article class="faq-item">
+        <h3>Quality Verification</h3>
+        <p>Every item is authenticity-checked and quality-inspected before delivery.</p>
+      </article>
+      <article class="faq-item">
+        <h3>Flexible Booking</h3>
+        <p>Simple date-based booking with clear terms and transparent rental pricing.</p>
+      </article>
+      <article class="faq-item">
+        <h3>Support & Return Assistance</h3>
+        <p>Dedicated support for booking changes, returns, and after-rental guidance.</p>
+      </article>
+    </div>
+  </section>
+</body>
+</html>

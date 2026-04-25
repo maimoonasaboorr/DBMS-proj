@@ -13,10 +13,10 @@
   <header class="nav">
     <div class="brand">LUXURY RENT</div>
     <nav class="menu">
-      <a href="#">FAQs</a>
-      <a href="#">About Us</a>
-      <a href="#">Contact</a>
-      <a href="#">Services</a>
+      <a href="{{ url_for('faqs') }}">FAQs</a>
+      <a href="{{ url_for('about') }}">About Us</a>
+      <a href="{{ url_for('contact') }}">Contact Us</a>
+      <a href="{{ url_for('services') }}">Services</a>
     </nav>
     <a class="ghost-btn signup-btn" href="/signup">Sign Up</a>
   </header>
@@ -25,7 +25,8 @@
     <p class="eyebrow reveal">MEMBERS ONLY ACCESS</p>
     <h1 class="reveal delay-1">The Art of <span class="timeless">timeless</span> Elegance</h1>
     <p class="desc reveal delay-2">
-      Please sign in to view the collection, pricing, and concierge rental access.
+      Discover how Veblon Luxury Rent gives you premium designer pieces in exceptional condition
+      without long-term ownership costs. Sign in to explore curated collections and flexible rentals.
     </p>
     <div class="actions reveal delay-3">
       <a class="primary login-link" href="/login">Login</a>
@@ -37,8 +38,12 @@
       <p class="eyebrow reveal">CURATED LUXURY ACCESS</p>
       <h1 class="reveal delay-1">The Art of <span class="timeless">timeless</span> Elegance</h1>
       <p class="desc reveal delay-2">
-        High-demand watches, couture bags, and statement accessories available on-demand
-        with insured delivery and concierge support.
+        At Veblon Luxury Rent, you can reserve iconic watches, couture bags, and refined statement
+        accessories for special occasions, business events, and destination travel.
+      </p>
+      <p class="desc reveal delay-2">
+        Every item is verified for authenticity, professionally maintained, and delivered with
+        premium care standards so your experience always feels confident, polished, and exclusive.
       </p>
       <div class="actions reveal delay-3">
         <button class="primary">Browse Collection</button>
