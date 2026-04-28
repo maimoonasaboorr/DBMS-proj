@@ -14,13 +14,20 @@
       <a href="{{ url_for('admin_dashboard') }}">Admin</a>
       <a href="{{ url_for('faqs') }}">FAQs</a>
     </nav>
-    <a class="ghost-btn signup-btn" href="{{ url_for('login') }}">Logout</a>
+    <a class="ghost-btn signup-btn" href="{{ url_for('logout') }}">Logout</a>
   </header>
 
   <section class="auth-card">
     <p class="eyebrow">ADMIN DASHBOARD</p>
     <h1>Admin Dashboard</h1>
-    <p class="desc">You are logged in as admin (role_id = 2).</p>
+    <p class="desc">Choose what you want to manage.</p>
+
+    <div style="display:grid;gap:12px;margin-top:16px;">
+      <a class="primary auth-submit" href="{{ url_for('admin_categories') }}" style="text-align:center;text-decoration:none;">Manage Categories</a>
+      <a class="primary auth-submit" href="{{ url_for('admin_brands') }}" style="text-align:center;text-decoration:none;">Manage Brands</a>
+      <a class="primary auth-submit" href="{{ url_for('admin_products') }}" style="text-align:center;text-decoration:none;">Manage Products</a>
+      <a class="primary auth-submit" href="{{ url_for('admin_inventory') }}" style="text-align:center;text-decoration:none;">Manage Inventory</a>
+    </div>
   </section>
 </body>
 </html>

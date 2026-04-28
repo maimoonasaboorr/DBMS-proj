@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Products | Luxury Rent</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="auth-page">
+  <header class="nav">
+    <div class="brand">LUXURY RENT</div>
+    <nav class="menu">
+      <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+      <a href="{{ url_for('admin_categories') }}">Categories</a>
+      <a href="{{ url_for('admin_brands') }}">Brands</a>
+      <a href="{{ url_for('admin_inventory') }}">Inventory</a>
+    </nav>
+    <a class="ghost-btn signup-btn" href="{{ url_for('logout') }}">Logout</a>
+  </header>
+
+  <section class="auth-card">
+    <p class="eyebrow">ADMIN</p>
+    <h1>Products</h1>
+
+    <form method="post" action="{{ url_for('admin_add_product') }}" class="auth-form">
+      <label for="product_name">Product Name</label>
+      <input id="product_name" name="product_name" type="text" required>
+
+      <label for="category_id">Category</label>
+      <select id="category_id" name="category_id" required>
+        <option value="">Select category</option>
+        {% for c in categories %}
+          <option value="{{ c[0] }}">{{ c[1] }}</option>
+        {% endfor %}
+      </select>
+
+      <label for="brand_id">Brand</label>
+      <select id="brand_id" name="brand_id" required>
+        <option value="">Select brand</option>
+        {% for b in brands %}
+          <option value="{{ b[0] }}">{{ b[1] }}</option>
+        {% endfor %}
+      </select>
+
+      <label for="price_per_day">Price Per Day</label>
+      <input id="price_per_day" name="price_per_day" type="number" step="0.01" min="0" required>
+
+      <label for="deposit">Deposit</label>
+      <input id="deposit" name="deposit" type="number" step="0.01" min="0">
+
+      <label for="image_url">Image URL</label>
+      <input id="image_url" name="image_url" type="url" placeholder="https://...">
+
+      <button class="primary auth-submit" type="submit">Add Product</button>
+    </form>
+
+    <hr>
+    <h2>Existing Products</h2>
+    {% if products %}
+      {% for p in products %}
+        <div style="margin:10px 0;padding:8px;border:1px solid #ddd;">
+          <div><strong>{{ p[1] }}</strong> ({{ p[2] }} / {{ p[3] }})</div>
+          <div>Price/day: {{ p[4] }} | Deposit: {{ p[5] }} | Status: {{ p[6] }}</div>
+          <form method="post" action="{{ url_for('admin_update_product_status', product_id=p[0]) }}" style="margin-top:8px;">
+            <select name="status" required>
+              <option value="active" {% if p[6] == "active" %}selected{% endif %}>active</option>
+              <option value="inactive" {% if p[6] == "inactive" %}selected{% endif %}>inactive</option>
+              <option value="archived" {% if p[6] == "archived" %}selected{% endif %}>archived</option>
+            </select>
+            <button type="submit">Update Status</button>
+          </form>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No products found.</p>
+    {% endif %}
+  </section>
+</body>
+</html>

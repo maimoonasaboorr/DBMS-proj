@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Inventory | Luxury Rent</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="auth-page">
+  <header class="nav">
+    <div class="brand">LUXURY RENT</div>
+    <nav class="menu">
+      <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+      <a href="{{ url_for('admin_categories') }}">Categories</a>
+      <a href="{{ url_for('admin_brands') }}">Brands</a>
+      <a href="{{ url_for('admin_products') }}">Products</a>
+    </nav>
+    <a class="ghost-btn signup-btn" href="{{ url_for('logout') }}">Logout</a>
+  </header>
+
+  <section class="auth-card">
+    <p class="eyebrow">ADMIN</p>
+    <h1>Inventory</h1>
+    {% if error_message %}
+      <p class="form-msg">{{ error_message }}</p>
+    {% endif %}
+
+    <form method="post" action="{{ url_for('admin_add_inventory') }}" class="auth-form">
+      <label for="product_id">Product</label>
+      <select id="product_id" name="product_id" required>
+        <option value="">Select product</option>
+        {% for p in products %}
+          <option value="{{ p[0] }}">{{ p[1] }}</option>
+        {% endfor %}
+      </select>
+
+      <label for="serial_num">Serial Number</label>
+      <input id="serial_num" name="serial_num" type="text" required>
+
+      <label for="item_condition">Condition</label>
+      <select id="item_condition" name="item_condition">
+        <option value="good">good</option>
+        <option value="fair">fair</option>
+        <option value="excellent">excellent</option>
+        <option value="damaged">damaged</option>
+      </select>
+
+      <button class="primary auth-submit" type="submit">Add Inventory Item</button>
+    </form>
+
+    <hr>
+    <h2>Inventory List</h2>
+    {% if inventory %}
+      {% for i in inventory %}
+        <div style="margin:10px 0;padding:8px;border:1px solid #ddd;">
+          <div><strong>{{ i[1] }}</strong> | Serial: {{ i[2] }}</div>
+          <div>Status: {{ i[3] }} | Condition: {{ i[4] }}</div>
+          <form method="post" action="{{ url_for('admin_update_inventory_status', inventory_id=i[0]) }}" style="margin-top:8px;">
+            <select name="availability_status" required>
+              <option value="available" {% if i[3] == "available" %}selected{% endif %}>available</option>
+              <option value="reserved" {% if i[3] == "reserved" %}selected{% endif %}>reserved</option>
+              <option value="rented" {% if i[3] == "rented" %}selected{% endif %}>rented</option>
+              <option value="maintenance" {% if i[3] == "maintenance" %}selected{% endif %}>maintenance</option>
+              <option value="retired" {% if i[3] == "retired" %}selected{% endif %}>retired</option>
+            </select>
+            <button type="submit">Update Status</button>
+          </form>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No inventory found.</p>
+    {% endif %}
+  </section>
+</body>
+</html>
