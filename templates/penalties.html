@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Penalties | Luxury Rent</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="auth-page">
+  <header class="nav">
+    <div class="brand">LUXURY RENT</div>
+    <nav class="menu">
+      <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+      <a href="{{ url_for('admin_returns') }}">Returns</a>
+      <a href="{{ url_for('admin_penalties') }}">Penalties</a>
+      <a href="{{ url_for('admin_payments') }}">Payments</a>
+    </nav>
+    <a class="ghost-btn signup-btn" href="{{ url_for('logout') }}">Logout</a>
+  </header>
+
+  <section class="auth-card">
+    <p class="eyebrow">ADMIN</p>
+    <h1>Penalties</h1>
+
+    <h2>Add Penalty</h2>
+    {% if returnable %}
+      {% for r in returnable %}
+        <div style="margin:10px 0;padding:10px;border:1px solid #d1b780;border-radius:10px;background:rgba(255,249,238,.7);">
+          <div><strong>Return #{{ r[0] }}</strong> | {{ r[1] }} | {{ r[2] }}</div>
+          <div>Condition: {{ r[3] }}</div>
+          <form method="post" action="{{ url_for('admin_add_penalty', return_id=r[0]) }}" class="auth-form" style="margin-top:8px;">
+            <label for="amount_{{ r[0] }}">Amount</label>
+            <input id="amount_{{ r[0] }}" name="amount" type="number" step="0.01" min="0" required>
+
+            <label for="reason_{{ r[0] }}">Reason</label>
+            <input id="reason_{{ r[0] }}" name="reason" type="text" required>
+            <button class="primary" type="submit">Add Penalty</button>
+          </form>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No return records available for new penalties.</p>
+    {% endif %}
+
+    <hr>
+    <h2>Existing Penalties</h2>
+    {% if penalties %}
+      {% for p in penalties %}
+        <div style="margin:10px 0;padding:10px;border:1px solid #d1b780;border-radius:10px;background:rgba(255,249,238,.7);">
+          <div><strong>Penalty #{{ p[0] }}</strong> | {{ p[1] }} | {{ p[2] }}</div>
+          <div>Amount: {{ p[3] }} | Reason: {{ p[4] }} | Status: {{ p[5] }}</div>
+          <form method="post" action="{{ url_for('admin_update_penalty', penalty_id=p[0]) }}" style="margin-top:8px;">
+            <label for="status_{{ p[0] }}">Update Status</label>
+            <select id="status_{{ p[0] }}" name="status" required>
+              <option value="unpaid" {% if p[5] == "unpaid" %}selected{% endif %}>unpaid</option>
+              <option value="paid" {% if p[5] == "paid" %}selected{% endif %}>paid</option>
+              <option value="waived" {% if p[5] == "waived" %}selected{% endif %}>waived</option>
+            </select>
+            <button class="primary" type="submit">Update Penalty</button>
+          </form>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No penalties found.</p>
+    {% endif %}
+  </section>
+</body>
+</html>

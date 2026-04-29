@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Payments | Luxury Rent</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="auth-page">
+  <header class="nav">
+    <div class="brand">LUXURY RENT</div>
+    <nav class="menu">
+      <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+      <a href="{{ url_for('admin_bookings') }}">Bookings</a>
+      <a href="{{ url_for('admin_users') }}">Users</a>
+      <a href="{{ url_for('admin_payments') }}">Payments</a>
+    </nav>
+    <a class="ghost-btn signup-btn" href="{{ url_for('logout') }}">Logout</a>
+  </header>
+
+  <section class="auth-card">
+    <p class="eyebrow">ADMIN</p>
+    <h1>Payments</h1>
+    <p class="desc">Payment history and current payment statuses.</p>
+
+    {% if payments %}
+      {% for pay in payments %}
+        <div style="margin:10px 0;padding:10px;border:1px solid #d1b780;border-radius:10px;background:rgba(255,249,238,.7);">
+          <div><strong>Payment #{{ pay[0] }}</strong> | {{ pay[1] }} | {{ pay[2] }}</div>
+          <div>Amount: {{ pay[3] }} | Date: {{ pay[4] }} | Status: {{ pay[5] }}</div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No payments found.</p>
+    {% endif %}
+  </section>
+</body>
+</html>

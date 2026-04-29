@@ -24,9 +24,35 @@
     {% if error_message %}
       <p class="form-msg">{{ error_message }}</p>
     {% endif %}
+    <h2>Update Inventory Status</h2>
+    <p class="desc">Change inventory availability status below.</p>
+    {% if inventory %}
+      {% for i in inventory %}
+        <div style="margin:12px 0;padding:12px;border:1px solid #d1b780;border-radius:12px;background:rgba(255,249,238,.7);">
+          <div><strong>{{ i[1] }}</strong></div>
+          <div>Status: {{ i[2] }} | Condition: {{ i[3] }}</div>
 
+          <h3 style="margin-top:10px;">Update Inventory Status</h3>
+          <form method="post" action="{{ url_for('admin_update_inventory_status', inventory_id=i[0]) }}" style="margin-top:8px;">
+            <select name="availability_status" required>
+              <option value="available" {% if i[2] == "available" %}selected{% endif %}>available</option>
+              <option value="reserved" {% if i[2] == "reserved" %}selected{% endif %}>reserved</option>
+              <option value="rented" {% if i[2] == "rented" %}selected{% endif %}>rented</option>
+              <option value="maintenance" {% if i[2] == "maintenance" %}selected{% endif %}>maintenance</option>
+              <option value="retired" {% if i[2] == "retired" %}selected{% endif %}>retired</option>
+            </select>
+            <button class="primary" type="submit">Update Status</button>
+          </form>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No inventory found.</p>
+    {% endif %}
+
+    <hr>
+    <h2>Add Inventory Item</h2>
     <form method="post" action="{{ url_for('admin_add_inventory') }}" class="auth-form">
-      <label for="product_id">Product</label>
+      <label for="product_id">Product Name</label>
       <select id="product_id" name="product_id" required>
         <option value="">Select product</option>
         {% for p in products %}
@@ -34,8 +60,14 @@
         {% endfor %}
       </select>
 
-      <label for="serial_num">Serial Number</label>
-      <input id="serial_num" name="serial_num" type="text" required>
+      <label for="availability_status">Status</label>
+      <select id="availability_status" name="availability_status">
+        <option value="available">available</option>
+        <option value="reserved">reserved</option>
+        <option value="rented">rented</option>
+        <option value="maintenance">maintenance</option>
+        <option value="retired">retired</option>
+      </select>
 
       <label for="item_condition">Condition</label>
       <select id="item_condition" name="item_condition">
@@ -47,29 +79,6 @@
 
       <button class="primary auth-submit" type="submit">Add Inventory Item</button>
     </form>
-
-    <hr>
-    <h2>Inventory List</h2>
-    {% if inventory %}
-      {% for i in inventory %}
-        <div style="margin:10px 0;padding:8px;border:1px solid #ddd;">
-          <div><strong>{{ i[1] }}</strong> | Serial: {{ i[2] }}</div>
-          <div>Status: {{ i[3] }} | Condition: {{ i[4] }}</div>
-          <form method="post" action="{{ url_for('admin_update_inventory_status', inventory_id=i[0]) }}" style="margin-top:8px;">
-            <select name="availability_status" required>
-              <option value="available" {% if i[3] == "available" %}selected{% endif %}>available</option>
-              <option value="reserved" {% if i[3] == "reserved" %}selected{% endif %}>reserved</option>
-              <option value="rented" {% if i[3] == "rented" %}selected{% endif %}>rented</option>
-              <option value="maintenance" {% if i[3] == "maintenance" %}selected{% endif %}>maintenance</option>
-              <option value="retired" {% if i[3] == "retired" %}selected{% endif %}>retired</option>
-            </select>
-            <button type="submit">Update Status</button>
-          </form>
-        </div>
-      {% endfor %}
-    {% else %}
-      <p>No inventory found.</p>
-    {% endif %}
   </section>
 </body>
 </html>

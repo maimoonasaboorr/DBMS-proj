@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Returns | Luxury Rent</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="auth-page">
+  <header class="nav">
+    <div class="brand">LUXURY RENT</div>
+    <nav class="menu">
+      <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+      <a href="{{ url_for('admin_rentals') }}">Rentals</a>
+      <a href="{{ url_for('admin_returns') }}">Returns</a>
+      <a href="{{ url_for('admin_penalties') }}">Penalties</a>
+    </nav>
+    <a class="ghost-btn signup-btn" href="{{ url_for('logout') }}">Logout</a>
+  </header>
+
+  <section class="auth-card">
+    <p class="eyebrow">ADMIN</p>
+    <h1>Returns</h1>
+
+    <h2>Process Pending Returns</h2>
+    {% if pending_returns %}
+      {% for p in pending_returns %}
+        <div style="margin:10px 0;padding:10px;border:1px solid #d1b780;border-radius:10px;background:rgba(255,249,238,.7);">
+          <div><strong>Rental #{{ p[0] }}</strong> | {{ p[1] }} | {{ p[2] }}</div>
+          <div>Due: {{ p[3] }}</div>
+          <form method="post" action="{{ url_for('admin_process_return', rental_id=p[0]) }}" class="auth-form" style="margin-top:8px;">
+            <label for="return_date_{{ p[0] }}">Return Date</label>
+            <input id="return_date_{{ p[0] }}" name="return_date" type="date" required>
+
+            <label for="item_condition_{{ p[0] }}">Item Condition</label>
+            <select id="item_condition_{{ p[0] }}" name="item_condition" required>
+              <option value="excellent">excellent</option>
+              <option value="good">good</option>
+              <option value="fair">fair</option>
+              <option value="damaged">damaged</option>
+              <option value="lost">lost</option>
+            </select>
+            <button class="primary" type="submit">Process Return</button>
+          </form>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No pending returns.</p>
+    {% endif %}
+
+    <hr>
+    <h2>Processed Returns</h2>
+    {% if returns %}
+      {% for r in returns %}
+        <div style="margin:10px 0;padding:10px;border:1px solid #d1b780;border-radius:10px;background:rgba(255,249,238,.7);">
+          <div><strong>Return #{{ r[0] }}</strong> | {{ r[1] }} | {{ r[2] }}</div>
+          <div>Return Date: {{ r[3] }} | Condition: {{ r[4] }}</div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No processed returns yet.</p>
+    {% endif %}
+  </section>
+</body>
+</html>

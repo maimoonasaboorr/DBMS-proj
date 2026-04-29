@@ -190,8 +190,6 @@ def admin_dashboard():
 def logout():
     session.clear()
     return redirect(url_for("login"))
-
-
 # ── CATEGORIES ────────────────────────────────────────────
 
 @app.route("/admin/categories")
@@ -302,16 +300,14 @@ def admin_products():
         return redirect(url_for("login"))
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute(
-        """
+    cur.execute("""
         SELECT p.product_id, p.product_name, c.category_name, b.brand_name,
                p.price_per_day, p.deposit, p.status
         FROM products p
         JOIN categories c ON p.category_id = c.category_id
         JOIN brands b ON p.brand_id = b.brand_id
         ORDER BY p.product_name
-        """
-    )
+    """)
     products = cur.fetchall()
     cur.execute("SELECT category_id, category_name FROM categories ORDER BY category_name")
     categories = cur.fetchall()
@@ -319,21 +315,20 @@ def admin_products():
     brands = cur.fetchall()
     cur.close()
     conn.close()
-    return render_template(
-        "products.html", products=products, categories=categories, brands=brands
-    )
+    return render_template("products.html", products=products,
+                           categories=categories, brands=brands)
 
 
 @app.route("/admin/products/add", methods=["POST"])
 def admin_add_product():
     if not session.get("user_id") or session.get("role_id") != 2:
         return redirect(url_for("login"))
-    name = request.form.get("product_name", "").strip()
+    name        = request.form.get("product_name", "").strip()
     category_id = request.form.get("category_id")
-    brand_id = request.form.get("brand_id")
-    price = request.form.get("price_per_day")
-    deposit = request.form.get("deposit", 0)
-    image_url = request.form.get("image_url", "").strip() or None
+    brand_id    = request.form.get("brand_id")
+    price       = request.form.get("price_per_day")
+    deposit     = request.form.get("deposit", 0)
+    image_url   = request.form.get("image_url", "").strip() or None
 
     if not all([name, category_id, brand_id, price]):
         return redirect(url_for("admin_products"))
@@ -341,13 +336,10 @@ def admin_add_product():
     conn = get_connection()
     cur = conn.cursor()
     try:
-        cur.execute(
-            """
+        cur.execute("""
             INSERT INTO products (product_name, category_id, brand_id, price_per_day, deposit, image_url)
             VALUES (%s, %s, %s, %s, %s, %s)
-            """,
-            (name, category_id, brand_id, price, deposit, image_url),
-        )
+        """, (name, category_id, brand_id, price, deposit, image_url))
         conn.commit()
     except Exception:
         conn.rollback()
@@ -366,9 +358,7 @@ def admin_update_product_status(product_id):
         conn = get_connection()
         cur = conn.cursor()
         try:
-            cur.execute(
-                "UPDATE products SET status = %s WHERE product_id = %s", (status, product_id)
-            )
+            cur.execute("UPDATE products SET status = %s WHERE product_id = %s", (status, product_id))
             conn.commit()
         except Exception:
             conn.rollback()
@@ -384,38 +374,22 @@ def admin_update_product_status(product_id):
 def admin_inventory():
     if not session.get("user_id") or session.get("role_id") != 2:
         return redirect(url_for("login"))
-    inventory = []
-    products = []
-    error_message = None
-    conn = None
-    cur = None
-    try:
-        conn = get_connection()
-        cur = conn.cursor()
-        cur.execute(
-            """
-            SELECT i.inventory_id, p.product_name, i.serial_num,
-                   i.availability_status, i.item_condition
-            FROM inventory i
-            JOIN products p ON i.product_id = p.product_id
-            ORDER BY p.product_name
-            """
-        )
-        inventory = cur.fetchall()
-        cur.execute(
-            "SELECT product_id, product_name FROM products WHERE status = 'active' ORDER BY product_name"
-        )
-        products = cur.fetchall()
-    except Exception:
-        error_message = "Could not load inventory data. Check inventory table columns and try again."
-    finally:
-        if cur:
-            cur.close()
-        if conn:
-            conn.close()
-    return render_template(
-        "inventory.html", inventory=inventory, products=products, error_message=error_message
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(
+        """
+        SELECT i.inventory_id, p.product_name, i.availability_status, i.item_condition
+        FROM inventory i
+        JOIN products p ON i.product_id = p.product_id
+        ORDER BY p.product_name
+        """
     )
+    inventory = cur.fetchall()
+    cur.execute("SELECT product_id, product_name FROM products WHERE status = 'active' ORDER BY product_name")
+    products = cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template("inventory.html", inventory=inventory, products=products)
 
 
 @app.route("/admin/inventory/add", methods=["POST"])
@@ -423,10 +397,10 @@ def admin_add_inventory():
     if not session.get("user_id") or session.get("role_id") != 2:
         return redirect(url_for("login"))
     product_id = request.form.get("product_id")
-    serial_num = request.form.get("serial_num", "").strip()
-    condition = request.form.get("item_condition", "good")
+    status = request.form.get("availability_status", "available")
+    condition  = request.form.get("item_condition", "good")
 
-    if not product_id or not serial_num:
+    if not product_id:
         return redirect(url_for("admin_inventory"))
 
     conn = get_connection()
@@ -434,10 +408,10 @@ def admin_add_inventory():
     try:
         cur.execute(
             """
-            INSERT INTO inventory (product_id, serial_num, item_condition)
+            INSERT INTO inventory (product_id, availability_status, item_condition)
             VALUES (%s, %s, %s)
             """,
-            (product_id, serial_num, condition),
+            (product_id, status, condition),
         )
         conn.commit()
     except Exception:
@@ -458,10 +432,8 @@ def admin_update_inventory_status(inventory_id):
         conn = get_connection()
         cur = conn.cursor()
         try:
-            cur.execute(
-                "UPDATE inventory SET availability_status = %s WHERE inventory_id = %s",
-                (status, inventory_id),
-            )
+            cur.execute("UPDATE inventory SET availability_status = %s WHERE inventory_id = %s",
+                        (status, inventory_id))
             conn.commit()
         except Exception:
             conn.rollback()
@@ -470,6 +442,326 @@ def admin_update_inventory_status(inventory_id):
             conn.close()
     return redirect(url_for("admin_inventory"))
 
+@app.route("/admin/bookings")
+def admin_bookings():
+    if not session.get("user_id") or session.get("role_id") != 2:
+        return redirect(url_for("login"))
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT b.booking_id, u.full_name, p.product_name,
+               b.start_date, b.end_date, b.status
+        FROM bookings b
+        JOIN users u ON b.user_id = u.user_id
+        JOIN inventory i ON b.inventory_id = i.inventory_id
+        JOIN products p ON i.product_id = p.product_id
+        ORDER BY b.booking_id DESC
+    """)
+    bookings = cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template("bookings.html", bookings=bookings)
+
+
+@app.route("/admin/bookings/update/<int:booking_id>", methods=["POST"])
+def admin_update_booking(booking_id):
+    if not session.get("user_id") or session.get("role_id") != 2:
+        return redirect(url_for("login"))
+
+    new_status = request.form.get("status")
+    if new_status not in ("confirmed", "cancelled"):
+        return redirect(url_for("admin_bookings"))
+
+    conn = get_connection()
+    cur = conn.cursor()
+    try:
+        cur.execute("SELECT inventory_id, start_date, end_date, status FROM bookings WHERE booking_id = %s", (booking_id,))
+        booking = cur.fetchone()
+
+        if not booking:
+            return redirect(url_for("admin_bookings"))
+
+        inventory_id = booking[0]
+        start_date   = booking[1]
+        end_date     = booking[2]
+        current_status = booking[3]
+
+        if new_status == "confirmed":
+            if current_status != "pending":
+                return redirect(url_for("admin_bookings"))
+
+            # conflict check
+            cur.execute("""
+                SELECT 1 FROM bookings
+                WHERE inventory_id = %s
+                AND booking_id != %s
+                AND status = 'confirmed'
+                AND start_date <= %s AND end_date >= %s
+            """, (inventory_id, booking_id, end_date, start_date))
+
+            if cur.fetchone():
+                return redirect(url_for("admin_bookings"))
+
+            cur.execute("UPDATE bookings SET status = 'confirmed' WHERE booking_id = %s", (booking_id,))
+            cur.execute("UPDATE inventory SET availability_status = 'rented' WHERE inventory_id = %s", (inventory_id,))
+            cur.execute("INSERT INTO rentals (booking_id, issue_date, due_date) VALUES (%s, %s, %s)", (booking_id, start_date, end_date))
+
+        elif new_status == "cancelled":
+            if current_status not in ("pending", "confirmed"):
+                return redirect(url_for("admin_bookings"))
+
+            cur.execute("UPDATE bookings SET status = 'cancelled' WHERE booking_id = %s", (booking_id,))
+            cur.execute("UPDATE inventory SET availability_status = 'available' WHERE inventory_id = %s", (inventory_id,))
+            cur.execute("UPDATE rentals SET status = 'cancelled' WHERE booking_id = %s AND status = 'ongoing'", (booking_id,))
+
+        conn.commit()
+    except Exception:
+        conn.rollback()
+    finally:
+        cur.close()
+        conn.close()
+    return redirect(url_for("admin_bookings"))
+
+@app.route("/admin/users")
+def admin_users():
+    if not session.get("user_id") or session.get("role_id") != 2:
+        return redirect(url_for("login"))
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT user_id, full_name, email, phone, address
+        FROM users WHERE role_id = 1 ORDER BY full_name
+    """)
+    regular_users = cur.fetchall()
+    cur.execute("""
+        SELECT user_id, full_name, email, phone, address
+        FROM users WHERE role_id = 2 ORDER BY full_name
+    """)
+    admins = cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template("users.html", regular_users=regular_users, admins=admins)
+
+
+@app.route("/admin/payments")
+def admin_payments():
+    if not session.get("user_id") or session.get("role_id") != 2:
+        return redirect(url_for("login"))
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT pay.payment_id, u.full_name, p.product_name,
+               pay.amount, pay.payment_date, pay.status
+        FROM payments pay
+        JOIN rentals r ON pay.rental_id = r.rental_id
+        JOIN bookings b ON r.booking_id = b.booking_id
+        JOIN users u ON b.user_id = u.user_id
+        JOIN inventory i ON b.inventory_id = i.inventory_id
+        JOIN products p ON i.product_id = p.product_id
+        ORDER BY pay.payment_date DESC
+    """)
+    payments = cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template("payments.html", payments=payments)
+
+
+# ── RENTALS ───────────────────────────────────────────────
+
+@app.route("/admin/rentals")
+def admin_rentals():
+    if not session.get("user_id") or session.get("role_id") != 2:
+        return redirect(url_for("login"))
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT r.rental_id, u.full_name, p.product_name,
+               r.issue_date, r.due_date, r.status
+        FROM rentals r
+        JOIN bookings b ON r.booking_id = b.booking_id
+        JOIN users u ON b.user_id = u.user_id
+        JOIN inventory i ON b.inventory_id = i.inventory_id
+        JOIN products p ON i.product_id = p.product_id
+        ORDER BY r.rental_id DESC
+    """)
+    rentals = cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template("rentals.html", rentals=rentals)
+
+
+# ── RETURNS ───────────────────────────────────────────────
+
+@app.route("/admin/returns")
+def admin_returns():
+    if not session.get("user_id") or session.get("role_id") != 2:
+        return redirect(url_for("login"))
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT rt.return_id, u.full_name, p.product_name,
+               rt.return_date, rt.item_condition
+        FROM returns rt
+        JOIN rentals r ON rt.rental_id = r.rental_id
+        JOIN bookings b ON r.booking_id = b.booking_id
+        JOIN users u ON b.user_id = u.user_id
+        JOIN inventory i ON b.inventory_id = i.inventory_id
+        JOIN products p ON i.product_id = p.product_id
+        ORDER BY rt.return_id DESC
+    """)
+    returns = cur.fetchall()
+
+    cur.execute("""
+        SELECT r.rental_id, u.full_name, p.product_name, r.due_date
+        FROM rentals r
+        JOIN bookings b ON r.booking_id = b.booking_id
+        JOIN users u ON b.user_id = u.user_id
+        JOIN inventory i ON b.inventory_id = i.inventory_id
+        JOIN products p ON i.product_id = p.product_id
+        WHERE r.status = 'ongoing'
+        AND r.rental_id NOT IN (SELECT rental_id FROM returns)
+        ORDER BY r.due_date
+    """)
+    pending_returns = cur.fetchall()
+
+    cur.close()
+    conn.close()
+    return render_template("returns.html", returns=returns, pending_returns=pending_returns)
+
+
+@app.route("/admin/returns/process/<int:rental_id>", methods=["POST"])
+def admin_process_return(rental_id):
+    if not session.get("user_id") or session.get("role_id") != 2:
+        return redirect(url_for("login"))
+
+    return_date = request.form.get("return_date")
+    condition   = request.form.get("item_condition")
+
+    if not return_date or condition not in ("excellent", "good", "fair", "damaged", "lost"):
+        return redirect(url_for("admin_returns"))
+
+    conn = get_connection()
+    cur = conn.cursor()
+    try:
+        cur.execute("""
+            SELECT b.inventory_id, r.due_date FROM rentals r
+            JOIN bookings b ON r.booking_id = b.booking_id
+            WHERE r.rental_id = %s
+        """, (rental_id,))
+        row = cur.fetchone()
+
+        if not row:
+            return redirect(url_for("admin_returns"))
+
+        inventory_id = row[0]
+        due_date     = row[1]
+
+        from datetime import date
+        return_date_obj = date.fromisoformat(return_date)
+        rental_status = "returned" if return_date_obj <= due_date else "overdue"
+
+        cur.execute("INSERT INTO returns (rental_id, return_date, item_condition) VALUES (%s, %s, %s)", (rental_id, return_date, condition))
+        cur.execute("UPDATE rentals SET status = %s, actual_return_date = %s WHERE rental_id = %s", (rental_status, return_date, rental_id))
+        cur.execute("UPDATE bookings SET status = 'completed' WHERE booking_id = (SELECT booking_id FROM rentals WHERE rental_id = %s)", (rental_id,))
+
+        new_inv_status = "retired" if condition == "lost" else "available"
+        cur.execute("UPDATE inventory SET availability_status = %s, item_condition = %s WHERE inventory_id = %s",
+                    (new_inv_status, "damaged" if condition == "lost" else condition, inventory_id))
+
+        conn.commit()
+    except Exception:
+        conn.rollback()
+    finally:
+        cur.close()
+        conn.close()
+    return redirect(url_for("admin_returns"))
+
+
+# ── PENALTIES ─────────────────────────────────────────────
+
+@app.route("/admin/penalties")
+def admin_penalties():
+    if not session.get("user_id") or session.get("role_id") != 2:
+        return redirect(url_for("login"))
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT pe.penalty_id, u.full_name, p.product_name,
+               pe.amount, pe.reason, pe.status
+        FROM penalties pe
+        JOIN returns rt ON pe.return_id = rt.return_id
+        JOIN rentals r ON rt.rental_id = r.rental_id
+        JOIN bookings b ON r.booking_id = b.booking_id
+        JOIN users u ON b.user_id = u.user_id
+        JOIN inventory i ON b.inventory_id = i.inventory_id
+        JOIN products p ON i.product_id = p.product_id
+        ORDER BY pe.penalty_id DESC
+    """)
+    penalties = cur.fetchall()
+
+    cur.execute("""
+        SELECT rt.return_id, u.full_name, p.product_name, rt.item_condition
+        FROM returns rt
+        JOIN rentals r ON rt.rental_id = r.rental_id
+        JOIN bookings b ON r.booking_id = b.booking_id
+        JOIN users u ON b.user_id = u.user_id
+        JOIN inventory i ON b.inventory_id = i.inventory_id
+        JOIN products p ON i.product_id = p.product_id
+        WHERE rt.return_id NOT IN (SELECT return_id FROM penalties)
+        ORDER BY rt.return_id DESC
+    """)
+    returnable = cur.fetchall()
+
+    cur.close()
+    conn.close()
+    return render_template("penalties.html", penalties=penalties, returnable=returnable)
+
+
+@app.route("/admin/penalties/add/<int:return_id>", methods=["POST"])
+def admin_add_penalty(return_id):
+    if not session.get("user_id") or session.get("role_id") != 2:
+        return redirect(url_for("login"))
+    amount = request.form.get("amount")
+    reason = request.form.get("reason", "").strip()
+    if not amount or not reason:
+        return redirect(url_for("admin_penalties"))
+    conn = get_connection()
+    cur = conn.cursor()
+    try:
+        cur.execute("INSERT INTO penalties (return_id, amount, reason) VALUES (%s, %s, %s)", (return_id, amount, reason))
+        conn.commit()
+    except Exception:
+        conn.rollback()
+    finally:
+        cur.close()
+        conn.close()
+    return redirect(url_for("admin_penalties"))
+
+
+@app.route("/admin/penalties/update/<int:penalty_id>", methods=["POST"])
+def admin_update_penalty(penalty_id):
+    if not session.get("user_id") or session.get("role_id") != 2:
+        return redirect(url_for("login"))
+    status = request.form.get("status")
+    if status not in ("paid", "waived", "unpaid"):
+        return redirect(url_for("admin_penalties"))
+    conn = get_connection()
+    cur = conn.cursor()
+    try:
+        cur.execute("UPDATE penalties SET status = %s WHERE penalty_id = %s", (status, penalty_id))
+        conn.commit()
+    except Exception:
+        conn.rollback()
+    finally:
+        cur.close()
+        conn.close()
+    return redirect(url_for("admin_penalties"))
+
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
+

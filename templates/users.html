@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Users | Luxury Rent</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="auth-page">
+  <header class="nav">
+    <div class="brand">LUXURY RENT</div>
+    <nav class="menu">
+      <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+      <a href="{{ url_for('admin_bookings') }}">Bookings</a>
+      <a href="{{ url_for('admin_users') }}">Users</a>
+      <a href="{{ url_for('admin_payments') }}">Payments</a>
+    </nav>
+    <a class="ghost-btn signup-btn" href="{{ url_for('logout') }}">Logout</a>
+  </header>
+
+  <section class="auth-card">
+    <p class="eyebrow">ADMIN</p>
+    <h1>Users</h1>
+
+    <h2>Regular Users</h2>
+    {% if regular_users %}
+      {% for u in regular_users %}
+        <div style="margin:10px 0;padding:10px;border:1px solid #d1b780;border-radius:10px;background:rgba(255,249,238,.7);">
+          <div><strong>{{ u[1] }}</strong> (ID: {{ u[0] }})</div>
+          <div>Email: {{ u[2] }}</div>
+          <div>Phone: {{ u[3] or 'N/A' }} | Address: {{ u[4] or 'N/A' }}</div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No regular users found.</p>
+    {% endif %}
+
+    <hr>
+    <h2>Admins</h2>
+    {% if admins %}
+      {% for a in admins %}
+        <div style="margin:10px 0;padding:10px;border:1px solid #d1b780;border-radius:10px;background:rgba(255,249,238,.7);">
+          <div><strong>{{ a[1] }}</strong> (ID: {{ a[0] }})</div>
+          <div>Email: {{ a[2] }}</div>
+          <div>Phone: {{ a[3] or 'N/A' }} | Address: {{ a[4] or 'N/A' }}</div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No admins found.</p>
+    {% endif %}
+  </section>
+</body>
+</html>

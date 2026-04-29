@@ -21,7 +21,31 @@
   <section class="auth-card">
     <p class="eyebrow">ADMIN</p>
     <h1>Products</h1>
+    <h2>Update Product Status</h2>
+    <p class="desc">Change product status from the options below.</p>
+    {% if products %}
+      {% for p in products %}
+        <div style="margin:12px 0;padding:12px;border:1px solid #d1b780;border-radius:12px;background:rgba(255,249,238,.7);">
+          <div><strong>{{ p[1] }}</strong> ({{ p[2] }} / {{ p[3] }})</div>
+          <div>Price/day: {{ p[4] }} | Deposit: {{ p[5] }} | Status: {{ p[6] }}</div>
 
+          <h3 style="margin-top:10px;">Update Product Status</h3>
+          <form method="post" action="{{ url_for('admin_update_product_status', product_id=p[0]) }}" style="margin-top:8px;">
+            <select name="status" required>
+              <option value="active" {% if p[6] == "active" %}selected{% endif %}>active</option>
+              <option value="inactive" {% if p[6] == "inactive" %}selected{% endif %}>inactive</option>
+              <option value="archived" {% if p[6] == "archived" %}selected{% endif %}>archived</option>
+            </select>
+            <button class="primary" type="submit">Update Status</button>
+          </form>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No products found.</p>
+    {% endif %}
+
+    <hr>
+    <h2>Add Product</h2>
     <form method="post" action="{{ url_for('admin_add_product') }}" class="auth-form">
       <label for="product_name">Product Name</label>
       <input id="product_name" name="product_name" type="text" required>
@@ -53,27 +77,6 @@
 
       <button class="primary auth-submit" type="submit">Add Product</button>
     </form>
-
-    <hr>
-    <h2>Existing Products</h2>
-    {% if products %}
-      {% for p in products %}
-        <div style="margin:10px 0;padding:8px;border:1px solid #ddd;">
-          <div><strong>{{ p[1] }}</strong> ({{ p[2] }} / {{ p[3] }})</div>
-          <div>Price/day: {{ p[4] }} | Deposit: {{ p[5] }} | Status: {{ p[6] }}</div>
-          <form method="post" action="{{ url_for('admin_update_product_status', product_id=p[0]) }}" style="margin-top:8px;">
-            <select name="status" required>
-              <option value="active" {% if p[6] == "active" %}selected{% endif %}>active</option>
-              <option value="inactive" {% if p[6] == "inactive" %}selected{% endif %}>inactive</option>
-              <option value="archived" {% if p[6] == "archived" %}selected{% endif %}>archived</option>
-            </select>
-            <button type="submit">Update Status</button>
-          </form>
-        </div>
-      {% endfor %}
-    {% else %}
-      <p>No products found.</p>
-    {% endif %}
   </section>
 </body>
 </html>
