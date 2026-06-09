@@ -6,7 +6,7 @@
   <title>Admin Penalties | Luxury Rent</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body class="auth-page">
+<body class="auth-page admin-panel">
   <header class="nav">
     <div class="brand">LUXURY RENT</div>
     <nav class="menu">
@@ -30,7 +30,7 @@
           <div>Condition: {{ r[3] }}</div>
           <form method="post" action="{{ url_for('admin_add_penalty', return_id=r[0]) }}" class="auth-form" style="margin-top:8px;">
             <label for="amount_{{ r[0] }}">Amount</label>
-            <input id="amount_{{ r[0] }}" name="amount" type="number" step="0.01" min="0" required>
+            <input id="amount_{{ r[0] }}" name="amount" type="number" step="1" min="0" required>
 
             <label for="reason_{{ r[0] }}">Reason</label>
             <input id="reason_{{ r[0] }}" name="reason" type="text" required>

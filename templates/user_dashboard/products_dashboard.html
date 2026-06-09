@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Products | Luxury Rent</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="auth-page">
+  <header class="nav">
+    <div class="brand">LUXURY RENT</div>
+    <nav class="menu">
+      <a href="{{ url_for('products_dashboard') }}">Products</a>
+      <a href="{{ url_for('my_bookings') }}">My Bookings</a>
+      <a href="{{ url_for('my_rentals') }}">My Rentals</a>
+      <a href="{{ url_for('my_payments') }}">My Payments</a>
+      <a href="{{ url_for('my_reviews') }}">My Reviews</a>
+      <a href="{{ url_for('my_profile') }}">My Profile</a>
+    </nav>
+    <a class="ghost-btn signup-btn" href="{{ url_for('logout') }}">Logout</a>
+  </header>
+
+  <section class="auth-card user-dashboard-card">
+    <p class="eyebrow">USER DASHBOARD</p>
+    <h1>Available Products</h1>
+    <p class="desc">Use filters to quickly find what you want to rent.</p>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <p class="form-msg">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="filters-row">
+      <div class="filter-item">
+        <label for="category_filter">Category</label>
+        <select id="category_filter">
+          <option value="">All categories</option>
+          {% for c in categories %}
+            <option value="{{ c[1] }}">{{ c[1] }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="filter-item">
+        <label for="brand_filter">Brand</label>
+        <select id="brand_filter">
+          <option value="">All brands</option>
+          {% for b in brands %}
+            <option value="{{ b[1] }}">{{ b[1] }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    {% if products %}
+      <div id="products_grid" class="products-grid">
+      {% for p in products %}
+        <div class="product-card" data-category="{{ p[2] }}" data-brand="{{ p[3] }}">
+          {% if p[6] %}
+            <img class="product-thumb" src="{{ url_for('static', filename='images/' ~ p[6]) }}" alt="{{ p[1] }}">
+          {% endif %}
+          <div><strong>{{ p[1] }}</strong></div>
+          <div>{{ p[2] }} / {{ p[3] }}</div>
+          <div>Price/day: {{ p[4] }} | Deposit: {{ p[5] }}</div>
+          {% if not p[7] %}
+            <div class="availability-note">No bookable inventory available.</div>
+          {% else %}
+            <div class="availability-note availability-note-empty">&nbsp;</div>
+          {% endif %}
+          <div class="product-card-actions">
+            {% if p[7] %}
+              <a class="primary auth-submit card-link"
+                 href="{{ url_for('product_detail', product_id=p[0], view='book') }}#book-section">Book Now</a>
+            {% else %}
+              <span class="primary auth-submit card-link disabled-btn" aria-disabled="true">Book Now</span>
+            {% endif %}
+            <a class="primary auth-submit card-link"
+               href="{{ url_for('product_detail', product_id=p[0], view='details') }}">View Details</a>
+          </div>
+        </div>
+      {% endfor %}
+      </div>
+      <p id="products_empty" class="desc" style="display:none;margin-top:14px;">No products found for selected filters.</p>
+    {% else %}
+      <p>No products are currently available in inventory.</p>
+    {% endif %}
+  </section>
+  <script>
+    const categoryFilter = document.getElementById("category_filter");
+    const brandFilter = document.getElementById("brand_filter");
+    const cards = Array.from(document.querySelectorAll(".product-card"));
+    const emptyState = document.getElementById("products_empty");
+
+    function applyFilters() {
+      const selectedCategory = categoryFilter.value;
+      const selectedBrand = brandFilter.value;
+      let visibleCount = 0;
+
+      cards.forEach((card) => {
+        const matchCategory = !selectedCategory || card.dataset.category === selectedCategory;
+        const matchBrand = !selectedBrand || card.dataset.brand === selectedBrand;
+        const show = matchCategory && matchBrand;
+        card.style.display = show ? "block" : "none";
+        if (show) visibleCount += 1;
+      });
+
+      if (emptyState) {
+        emptyState.style.display = visibleCount ? "none" : "block";
+      }
+    }
+
+    if (categoryFilter && brandFilter) {
+      categoryFilter.addEventListener("change", applyFilters);
+      brandFilter.addEventListener("change", applyFilters);
+    }
+  </script>
+</body>
+</html>

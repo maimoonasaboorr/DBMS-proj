@@ -6,7 +6,7 @@
   <title>Admin Returns | Luxury Rent</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body class="auth-page">
+<body class="auth-page admin-panel">
   <header class="nav">
     <div class="brand">LUXURY RENT</div>
     <nav class="menu">
@@ -21,6 +21,13 @@
   <section class="auth-card">
     <p class="eyebrow">ADMIN</p>
     <h1>Returns</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <p class="form-msg" style="margin-top:10px;">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
 
     <h2>Process Pending Returns</h2>
     {% if pending_returns %}
@@ -29,17 +36,30 @@
           <div><strong>Rental #{{ p[0] }}</strong> | {{ p[1] }} | {{ p[2] }}</div>
           <div>Due: {{ p[3] }}</div>
           <form method="post" action="{{ url_for('admin_process_return', rental_id=p[0]) }}" class="auth-form" style="margin-top:8px;">
-            <label for="return_date_{{ p[0] }}">Return Date</label>
-            <input id="return_date_{{ p[0] }}" name="return_date" type="date" required>
-
-            <label for="item_condition_{{ p[0] }}">Item Condition</label>
-            <select id="item_condition_{{ p[0] }}" name="item_condition" required>
-              <option value="excellent">excellent</option>
-              <option value="good">good</option>
-              <option value="fair">fair</option>
-              <option value="damaged">damaged</option>
-              <option value="lost">lost</option>
-            </select>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));gap:10px;width:100%;">
+              <div>
+                <label for="return_date_{{ p[0] }}">Return Date</label>
+                <input id="return_date_{{ p[0] }}" name="return_date" type="date" required>
+              </div>
+              <div>
+                <label for="item_condition_{{ p[0] }}">Item Condition</label>
+                <select id="item_condition_{{ p[0] }}" name="item_condition" required>
+                  <option value="excellent">excellent</option>
+                  <option value="good">good</option>
+                  <option value="fair">fair</option>
+                  <option value="damaged">damaged</option>
+                  <option value="lost">lost</option>
+                </select>
+              </div>
+              <div>
+                <label for="penalty_amount_{{ p[0] }}">Penalty Amount</label>
+                <input id="penalty_amount_{{ p[0] }}" name="penalty_amount" type="number" step="1" min="0" value="0">
+              </div>
+              <div>
+                <label for="penalty_reason_{{ p[0] }}">Penalty Reason (required if amount > 0)</label>
+                <input id="penalty_reason_{{ p[0] }}" name="penalty_reason" type="text" placeholder="Reason">
+              </div>
+            </div>
             <button class="primary" type="submit">Process Return</button>
           </form>
         </div>

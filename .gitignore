@@ -1,3 +1,4 @@
 .env
 .env.* 
+.backup_to_firebase.py
 __pycache__/
